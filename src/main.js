@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import Parent from './Parent';
-import Parent from './Parent_lifeCycle';
+import App from './App';
 ReactDOM.render(
-    (<Parent />),
+    (<App />),
     document.getElementById('root')
 );
