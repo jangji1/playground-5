@@ -5,11 +5,52 @@ import TodoList from './TodoList';
 import Footer from './Footer';
 
 class App extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            todos: [{
+                id: 1000,
+                text: '치킨에 맥주',
+                isDone: false
+            }, {
+                id: 1001,
+                text: '삽겹살에 쏘주',
+                isDone: false
+            }, {
+                id: 1002,
+                text: '떡순튀',
+                isDone: true
+            }]
+        };
+    }
+    addTodo = text => {
+        this.setState({
+            todos: [...this.state.todos, {
+                id: Date.now(),
+                text,
+                isDone: false
+            }]
+        });
+    };
+    deleteTodo = id => {
+        const newTodos = [...this.state.todos];
+        const deleteIndex = newTodos.findIndex(v => v.id === id);
+        newTodos.splice(deleteIndex, 1);
+        this.setState({
+            todos: newTodos
+        });
+    };
+
     render() {
         return (
             <div className="todo-app">
-                <Header />
-                <TodoList />
+                <Header
+                    addTodo={this.addTodo}
+                />
+                <TodoList
+                    todos={this.state.todos}
+                    deleteTodo={this.deleteTodo}
+                />
                 <Footer />
             </div>
         );
