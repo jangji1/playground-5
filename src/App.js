@@ -27,7 +27,7 @@ class App extends React.Component {
     addTodo = text => {
         this.setState({
             todos: [ ...this.state.todos, {
-                id: Data.now(),
+                id: Date.now(),
                 text,
                 isDone: false
             }]

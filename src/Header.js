@@ -19,7 +19,7 @@ import React from 'react';
 class Header extends React.Component {
     handleKeyDown = e => {
         const text = e.target.value;
-        if(!text || e.keyCode === 13) {
+        if(!text || e.keyCode !== 13) {
             return;
         }
         this.props.addTodo(text);

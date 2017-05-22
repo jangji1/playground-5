@@ -6,7 +6,7 @@ class Todo extends React.Component {
             <li className="todo-item">
                 <button className="toggle"/>
                 <div className="todo-item__view">
-                    <div className="todo-item__view__text"></div>
+                    <div className="todo-item__view__text">{this.props.text}</div>
                     <button 
                         className="todo-item__destroy"
                         onClick={this.props.deleteTodo}
