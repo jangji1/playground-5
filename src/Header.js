@@ -1,11 +1,10 @@
 import React from 'react';
-import TodoList from 'TodoList';
 import ClassNames from 'classnames';
 
 
 
 class Header extends React.Component {
-    handleKeyDown(e) {
+    handleKeyDown = e => {
         const text = e.target.value;
         if(!text || e.keyCode != 13) {
             return;
@@ -19,13 +18,14 @@ class Header extends React.Component {
         const {
             isAllDone,
             toggleAll
-        } = this.props
+        } = this.props;
         return(
                 <header>
                     <h1 className= "todo-app__header">todos</h1>
-                    <input type="text" className="todo-app__new-todo"
+                    <input type="text"
+                           className="todo-app__new-todo"
                            placeholder="What needs to be done?"
-                           onKeyDown={this.handleKeyDown.bind(this)} />
+                           onKeyDown={this.handleKeyDown} />
                     {/*여기서의 디스는 헤더의 인스턴스이다 1. .bind(this)해줘라*/}
                     <button className={ClassNames('toggle-all', {
                             checked: isAllDone

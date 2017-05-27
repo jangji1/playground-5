@@ -1,12 +1,13 @@
 import React from 'react';
-
+import ClassNames from 'classnames';
 class Footer extends React.Component {
-    const {
-        activeLength
-    }
-        = this.props
-}
+
     render() {
+        const {
+            activeLength,
+            hasCompleted
+        } = this.props;
+
         return(
                 <footer className="footer">
                     <span className="todo-count">

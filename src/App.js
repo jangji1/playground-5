@@ -45,18 +45,18 @@ import Header from './Header';
         this.setState({
             todos: newTodos
         });
-    }
+    };
 
     editTodo = (id) => {
         this.setState({
             editingId: id
         });
-    }
+    };
 
     saveTodo = (id, newText) => {
             const newTodos = [...this.state.todos];
             const editIndex = newTodos.findIndex(v => v.id === id);
-            newTodos[editIndex] = Object.assign({}, newText[editIndex], {
+            newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
                 text: newText
             });
             this.setState({
@@ -114,7 +114,7 @@ import Header from './Header';
                         isAllDone={todos.every(v => v.isDone)}
                 />
                 <TodoList
-                            todos={this.state.todos}
+                            todos={todos}
                             editingId={editingId}
                             deleteTodo={this.deleteTodo}
                             saveTodo={this.saveTodo}
