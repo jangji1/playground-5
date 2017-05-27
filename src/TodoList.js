@@ -1,16 +1,30 @@
 import React from 'react';
 import Todo from './Todo';
 
-// import Todo from './Todo';
-
 class TodoList extends React.Component {
+
     render(){
-        const todoList = this.props.todos.map(({id, text, isDone}) => (
+        const {
+            todos,
+            editingId,
+            deleteTodo,
+            editTodo,
+            saveTodo,
+            cancelEdit,
+            toggleTodo
+        } = this.props;
+
+        const todoList = todos.map(({id, text, isDone}) => (
             <Todo
                 key={id}
                 text={text}
-                idDone={isDone}
-                deleteTodo={() => this.props.deleteTodo(id)}
+                isDone={isDone}
+                isEditing={editingId === id}
+                editTodo={() => editTodo(id)}
+                deleteTodo={() => deleteTodo(id)}
+                saveTodo={text => saveTodo(id, text)}
+                cancelEdit={cancelEdit}
+                toggleTodo={() => toggleTodo(id)}
             />
         ));
 
