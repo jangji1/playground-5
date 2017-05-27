@@ -1,4 +1,5 @@
 import React from 'react';
+import ClassNames from 'classnames';
 //this bind를 안해주면 안됨 . 함수호출시 this 바인딩이 안됨!
 //리액트에선 기본 바인딩이 window가 아니라 null 로 바인딩된다.
 /*
@@ -29,13 +30,18 @@ class Header extends React.Component{
       this.props.addTodo(text);
       e.target.value = '';
     };
-
     render(){
+        const {
+            isAllDone,
+            toggleAll
+        } = this.props;
         return(
             <header>
                 <h1 className="todo-app__header">todos</h1>
                 <input type="text" className="todo-app__new-todo" placeholder="What needs to be done?" onKeyDown={this.handleKeyDown}/>
-                <button className="toggle-all"></button>
+                <button className={ClassNames('toggle-all' , {
+                    checked : isAllDone
+                })} onClick={toggleAll}/>
             </header>
         )
     }
