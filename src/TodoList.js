@@ -15,6 +15,7 @@ class TodoList extends React.Component {
         return (
             <div className="todo-app__main">
                 <ul className="todo-list">
+                    {todoList}
                     {
                         /*
                             <Todo text={'난1'}/>

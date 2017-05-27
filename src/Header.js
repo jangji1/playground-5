@@ -25,14 +25,14 @@
 import React from 'react';
 
 class Header extends React.Component {
-    handleKeyDown = e => {
+    handleKeyDown = e => { // 프로퍼티 자체에 애로우 펑션을 할당
         const text = e.target.value;
         if(!text || e.keyCode != 13) {
             return;
         }
         this.props.addTodo(text);
         e.target.value = ''; // addTodo 실행 값이 남아있으면 계속 실행됨
-    }
+    };
     render() {
         console.log(this); // Header의 인스턴스
         return (

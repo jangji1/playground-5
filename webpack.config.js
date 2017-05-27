@@ -5,6 +5,7 @@ const HOST  = 'localhost';
 const PORT  = 8080;
 const URL   = `http://${HOST}:${PORT}`;
 const _PATH = resolve(__dirname, 'src');
+console.log(__dirname);
 
 module.exports = {
     entry: [
