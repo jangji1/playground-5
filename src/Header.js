@@ -1,3 +1,42 @@
+import React from 'react';
+import ClassNames from 'classnames';
+
+class Header extends React.Component {
+    handleKeyDown = e => { // 프로퍼티 자체에 애로우 펑션을 할당
+        const text = e.target.value;
+        if(!text || e.keyCode != 13) {
+            return;
+        }
+        this.props.addTodo(text);
+        e.target.value = ''; // addTodo 실행 값이 남아있으면 계속 실행됨
+    };
+
+    render() {
+        const {
+            isAllDone,
+            toggleAll
+        } = this.props;
+        return (
+            <header>
+                <h1 className="todo-app__header">todos</h1>
+                <input
+                    type="text"
+                    className="todo-app__new-todo"
+                    placeholder="What needs to be done?"
+                    onKeyDown={this.handleKeyDown.bind(this)}
+                />
+                <button className={ClassNames('toggle-all', {
+                    checked: isAllDone
+                })}
+                onClick={toggleAll}
+            />
+            </header>
+        );
+    }
+}
+
+export default Header;
+
 /*
 
     1. 선언될 때마다 this 바인딩
@@ -21,33 +60,3 @@
     handler = e => {}; (Line.28)
 
 */
-
-import React from 'react';
-
-class Header extends React.Component {
-    handleKeyDown = e => { // 프로퍼티 자체에 애로우 펑션을 할당
-        const text = e.target.value;
-        if(!text || e.keyCode != 13) {
-            return;
-        }
-        this.props.addTodo(text);
-        e.target.value = ''; // addTodo 실행 값이 남아있으면 계속 실행됨
-    };
-    render() {
-        console.log(this); // Header의 인스턴스
-        return (
-            <header>
-                <h1 className="todo-app__header">todos</h1>
-                <input
-                    type="text"
-                    className="todo-app__new-todo"
-                    placeholder="What needs to be done?"
-                    onKeyDown={this.handleKeyDown.bind(this)}
-                />
-                <button className="toggle-all"/>
-            </header>
-        );
-    }
-}
-
-export default Header;
