@@ -8,7 +8,7 @@ class Todo extends React.Component{
             this._inputDom.value = this.props.text;
         }
     }
-    handleKeyDown = e => {
+    handleKeyDown(e) {
         const text = e.target.value;
         if(!text || e.keyCode !== 13) {
             return;
@@ -47,7 +47,7 @@ class Todo extends React.Component{
                 </div>
                 <input type="text" className="todo-item__edit"
                     ref = {ref => this._inputDom = ref}
-                    onKeyDown = {this.handleKeyDown}
+                    onKeyDown = {e => this.handleKeyDown}
                     onBlur = {cancelEdit}
                 />
             </li>
