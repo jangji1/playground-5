@@ -4,7 +4,6 @@ import ClassNames from 'classnames';
 class Footer extends React.Component {
     filterNames = ['All', 'Active', 'Completed'];
     render() {
-        console.log(filterName);
         const {
             activeLength,
             hasCompleted,
