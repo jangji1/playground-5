@@ -26,7 +26,7 @@ class TodoList extends React.Component {
                 toggleTodo={() => toggleTodo(id)}
             />
         ));
-
+        
         return (
             <div className="todo-app__main">
                 <ul className="todo-list">

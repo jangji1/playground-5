@@ -58,5 +58,6 @@ export default Header;
 
     4. 애로우펑션으로 정의 (class property 선언방식 (proposal2)) 가장 좋지만 아직...ㅠㅠ
     handler = e => {}; (Line.28)
+    바람직하지 않다. 문제 발생 프로토타입에 없고 인스턴스에 들어가있음
 
 */

@@ -8,7 +8,7 @@ class Todo extends React.Component {
             this._inputDOM.value = this.props.text;
         }
     }
-    handleKeyDown = e => { // 프로퍼티 자체에 애로우 펑션을 할당
+    handleKeyDown(e) { // 프로퍼티 자체에 애로우 펑션을 할당
         const text = e.target.value;
         if(!text || e.keyCode !== 13) {
             return;
@@ -16,6 +16,7 @@ class Todo extends React.Component {
         this.props.saveTodo(text);
         // e.target.value = ''; // saveTodo 실행 값이 남아있으면 계속 실행됨
     };
+
     render() {
         const {
             text,
@@ -50,7 +51,7 @@ class Todo extends React.Component {
                         this._inputDOM = ref;
                     }}
                     className="todo-item__edit"
-                    onKeyDown={this.handleKeyDown}
+                    onKeyDown={e => this.handleKeyDown(e)}
                     onBlur={cancelEdit}
                 />
             </li>
