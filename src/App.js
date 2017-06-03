@@ -36,7 +36,7 @@ class App extends React.Component {
 		this.toggleTodo = this.toggleTodo.bind(this);
 		this.toggleAll = this.toggleAll.bind(this);
 		this.clearCompleted = this.clearCompleted.bind(this);
-		//this.changeFilter = this.changeFilter.bind(this);
+		this.selectFilter = this.selectFilter.bind(this);
 	}
 	/* todoList에서 넘어왔다... editingId를 바꾸기 위해*/
 	editTodo(id){
@@ -110,19 +110,46 @@ class App extends React.Component {
 			todos : newTodos
 		});
 	}
+	selectFilter(filterName){
+		this.setState({
+			filterName : filterName
+		});
+	}
 
 	render() {
-		const activeLength = this.state.todos.filter(elem => !elem.isDone).length;
-		const hasCompleted = this.state.todos.some(elem => elem.isDone);
+
+		/*switch(this.state.filterName){
+			case 'All' :
+				var todos = this.state.todos;
+			break;
+			case 'Active' :
+				var todos = this.state.todos.filter(elem => !elem.isDone);
+			break;
+			case 'Completed' :
+				var todos = this.state.todos.filter(elem => elem.isDone);
+			break;
+		}*/
+		//console.log(todos);
+
+
+		const filterTodos = this.state.filterName === 'All' ? this.state.todos
+				: this.state.todos.filter(elem=>(
+						(this.state.filterName == 'Completed' && elem.isDone) ||
+						(this.state.filterName == 'Active' && !elem.isDone)
+					));
+
+		const activeLength = filterTodos.filter(elem => !elem.isDone).length;
+		const hasCompleted = filterTodos.some(elem => elem.isDone);
+
 		return(
 			<div className = "todo-app">
 				<Header
-					isAllDone ={this.state.todos.every(elem => elem.isDone)}
+					isAllDone ={filterTodos.every(elem => elem.isDone)}
 					addTodo={this.addTodo}
 					toggleAll={this.toggleAll}
 				/>
 				<TodoList
-					todos={this.state.todos}
+					todos={filterTodos}
 					editingId = {this.state.editingId}
 					deleteTodo={this.deleteTodo}
 					saveTodo = {this.saveTodo}
@@ -134,6 +161,8 @@ class App extends React.Component {
 					clearCompleted={this.clearCompleted}
 					activeLength={activeLength}
 					hasCompleted={hasCompleted}
+					selectFilter = {this.selectFilter}
+					filterName = {this.state.filterName}
 				/>
 			</div>
 		);

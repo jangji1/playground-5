@@ -8,9 +8,24 @@ const defaultProps = {
 class Footer extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			filterNames : ['All', 'Active', 'Completed']
+		}
+
 	}
+
 	render() {
-		console.log(this.props.hasCompleted)
+		const filterButtons = this.state.filterNames.map(elem => (
+				<li key={`filter#${elem}`}>
+					<a
+						className={
+							ClassNames({'selected' : this.props.filterName == elem})
+						}
+						onClick={()=>this.props.selectFilter(elem)}
+					>{elem}</a>
+				</li>
+
+			));
 		return(
 			<footer className='footer'>
 				<span className='todo-count'>
@@ -18,10 +33,10 @@ class Footer extends Component {
 					{' '}item{this.props.activeLength == 1 ? '' : 's'}
 					{' '}left
 				</span>
-				<ul className='todo-filters'>
-					<li><a>All</a></li>
-					<li><a>Active</a></li>
-					<li><a>Completed</a></li>
+				<ul className='todo-filters'
+					onClick={this.handleClick}
+				>
+					{filterButtons}
 				</ul>
 				<button
 					className={
