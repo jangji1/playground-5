@@ -19,6 +19,7 @@ class Header extends React.Component {
             isAllDone,
             toggleAll
         } = this.props;
+        //해체할당을 하면 기존에 있던 값이 각각 들어온다. 결과적으로 부모의 props값을 가져온다.
         return(
                 <header>
                     <h1 className= "todo-app__header">todos</h1>
@@ -59,6 +60,7 @@ this 바인딩 방법
         this.props.addTodo(text);
     }
     stage 2미만이어야만 사용가능하다.
+    프로토타입에 들어가지 않고 인스턴스 자신에게 프로퍼티를 할당하는 문제가 생기기 때문에
+    메서드로써의 효용성이 떨어지게 되었다.
 */
 export default Header;
-
