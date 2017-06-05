@@ -1,0 +1,67 @@
+* {
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: inline-block;
+  background: none;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  cursor: pointer;
+}
+
+body {
+  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.4em;
+  background: #f5f5f5;
+  color: #4d4d4d;
+  min-width: 230px;
+  max-width: 550px;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  font-weight: 300;
+}
+
+button, input[type="checkbox"] {
+  outline: none;
+}
+
+.hidden {
+  display: none;
+}
+header{padding:30px 0 0; text-align:center;}
+header button{border-radius:50%; padding:10px 5px; background-color:#fb6257; color:#fff; margin-left:5px;}
+.add_number{width:50%; height:30px; border:1px solid #ccc; }
+
+.deWi{width:100%; border-collapse: collapse; margin:50px 0 0;}
+.deWi th{border:1px solid #ccc; padding:10px 0;}
+.deWi td{text-align:center; border:1px solid #ccc; padding:5px 0;}
+.deWi td p{font-size:13px;}
+@keyframes deposit{
+    0%{font-size:13px; color:#000;}
+    50%{font-size:15px; }
+    100%{font-size:17px; color:#5050b7;}
+}
+
+@keyframes withdraw{
+    0%{font-size:13px; color:#000;}
+    50%{font-size:15px; }
+    100%{font-size:17px; color:#fb6257;}
+}
+
+
+.deWi td.deposit p{animation:deposit .5s;}
+.deWi td.withdraw p{animation:withdraw .5s;}
