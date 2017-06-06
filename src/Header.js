@@ -7,7 +7,7 @@ class Header extends React.Component {
             <header>
                    <h1>금전 출납부</h1>
                    <input
-                        type="text"
+                        type="number"
                         value=
                             {this.props.inputValue}
                         onChange=
