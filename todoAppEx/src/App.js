@@ -3,6 +3,7 @@ import Header from './Header';
 import TodoList from './TodoList';
 import Footer from './Footer';
 import axios from 'axios';
+import update from 'immutability-helper';
 
 const ax = axios.create({
     baseURL : 'http://localhost:2403/todos'
@@ -41,38 +42,60 @@ class App extends React.Component {
         ax.post('/', {text})
             .then(res => {
                 this.setState({
-                    todos: [...this.state.todos, res.data]
+                    todos: update(this.state.todos, {
+                        $push : [res.data]
+                    })
+                    /*[...this.state.todos, res.data]*/
                 });
             })
     };
-    deleteTodo = id => {
-        const newTodos = [...this.state.todos];
-        const deleteIndex = newTodos.findIndex(v => v.id === id);
+
+    deleteTodo = id => { // 낙관적 업데이트
+        const preveTodos = [...this.state.todos];
+        const deleteIndex = this.state.todos.findIndex(v => v.id === id);
+        const newTodos = update(preveTodos, {
+            $splice : [
+                [deleteIndex, 1]
+            ]
+        });
+        this.setState({
+            todos :  newTodos
+        });
 
         ax.delete(`/${id}`)
-            .then(() => {
-                newTodos.splice(deleteIndex, 1);
+            .catch(() => {
                 this.setState({
-                    todos: newTodos
+                    todos : preveTodos
                 })
-            });
+            })
     };
+
     editTodo = id => { // 수정
         this.setState({
             editingId: id
         });
     };
+
     saveTodo = (id, newText) => {
-        const newTodos = [...this.state.todos];
-        const editIndex = newTodos.findIndex(v => v.id === id);
+        const preveTodos = [...this.state.todos];
+        const editIndex = preveTodos.findIndex(v => v.id === id);
+        const newTodos = update(preveTodos, { // 인덱스로 접근
+           [editIndex] : {
+               text : {
+                   $set : newText
+               }
+           }
+        });
+        this.setState({
+            todos: newTodos,
+            editingId: null
+        });
         ax.put(`/${id}`, {text : newText})
-            .then(res => {
-                newTodos[editIndex] = res.data;
+            .catch(()=>{
                 this.setState({
-                    todos: newTodos,
-                    editingId: null
+                    todos : preveTodos
                 })
-            });
+            })
     };
     cancelEdit = () => {
         this.setState({
@@ -80,40 +103,64 @@ class App extends React.Component {
         })
     };
     togleTodo = id => {
-        const newTodos = [...this.state.todos];
-        const editIndex = newTodos.findIndex(v => v.id === id);
-        ax.put(`/${id}`,{isDone : !newTodos[editIndex].isDone})
-            .then(res => {
-                newTodos[editIndex] = res.data;
+        const preveTodos = [...this.state.todos];
+        const editIndex = preveTodos.findIndex(v => v.id === id);
+        const newDone = !preveTodos[editIndex].isDone;
+        const newTodos = update(preveTodos, {
+            [editIndex] :{
+                isDone : {
+                    $set : newDone
+                }
+            }
+        });
+        this.setState({
+            todos : newTodos
+        });
+        ax.put(`/${id}`,{isDone : newDone})
+            .catch(() => {
                 this.setState({
-                    todos: newTodos,
+                    todos : preveTodos
                 })
             });
     };
     toggleAll = () => { // every , some 전부순회하느냐 하나만 되도 하느냐
-        const newDone = this.state.todos.some(v => !v.isDone);
-        const axArray = this.state.todos.map(v => (
+        const preveTodos = [...this.state.todos];
+        const newDone = preveTodos.some(v => !v.isDone);
+        const newTodos = preveTodos.map(v => update(v, {
+            isDone : {
+                $set : newDone
+            }
+        }));
+        this.setState({
+            todos : newTodos
+        });
+
+        const axArray = preveTodos.map(v => (
             ax.put(`/${v.id}`, {isDone : newDone})
         ));
 
         axios.all(axArray)
-            .then(res => {
-                this.setState({
-                    todos: res.map(v => v.data)
-                });
-            });
+            .catch(()=>{
+            this.setState({todos : preveTodos})
+            })
     };
     clearCompleted = () => { // 완료 된애들 , 완료안된애들 db 삭제때문에 나눔
-        const newTodos = this.state.todos.filter(v => !v.isDone);
-        const axArray = this.state.todos.filter(v => v.isDone)
+        const preveTodos = [...this.state.todos];
+        const newTodos = update(preveTodos, {
+            $apply : todos => todos.filter(v => !v.isDone)
+        });
+
+        this.setState({
+            todos : newTodos
+        });
+
+        const axArray = preveTodos.filter(v => v.isDone)
             .map(v => {
                 ax.delete(`/${v.id}`)
             });
-        axios.all(axArray).then(() => {
-            this.setState({
-                todos: newTodos
-            })
-        });
+        axios.all(axArray).catch(()=>{
+            this.setState({todos : preveTodos});
+        })
     };
 
     render() {
