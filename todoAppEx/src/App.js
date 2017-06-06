@@ -28,7 +28,14 @@ class App extends React.Component {
                 id: 1002
             }
         ],
-        editingId: null
+        editingId: null,
+        filterName: 'All'
+    };
+
+    setlectFilter = filterName => {
+        this.setState({
+            filterName
+        })
     };
 
     addTodo = text => {
@@ -61,19 +68,19 @@ class App extends React.Component {
         });
         this.setState({
             todos: newTodos,
-            editingId : null
+            editingId: null
         })
     };
     cancelEdit = () => {
         this.setState({
-            editingId : null
+            editingId: null
         })
     };
     togleTodo = id => {
         const newTodos = [...this.state.todos];
         const editIndex = newTodos.findIndex(v => v.id === id);
         newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
-            isDone : !newTodos[editIndex].isDone
+            isDone: !newTodos[editIndex].isDone
         });
         this.setState({
             todos: newTodos,
@@ -82,42 +89,52 @@ class App extends React.Component {
     toggleAll = () => { // every , some 전부순회하느냐 하나만 되도 하느냐
         const newDone = this.state.todos.some(v => !v.isDone);
         const newTodos = this.state.todos.map(v => Object.assign({}, v, {
-            isDone : newDone
+                isDone: newDone
             })
         );
         this.setState({
-            todos : newTodos
+            todos: newTodos
         });
     };
     clearCompleted = () => {
         const newTodos = this.state.todos.filter(v => !v.isDone);
         this.setState({
-            todos : newTodos
+            todos: newTodos
         })
     };
+
     render() {
         const {
             todos,
-            editingId
+            editingId,
+            filterName
         }= this.state;
         const activeLength = todos.filter(v => !v.isDone).length;
         const hasCompleted = todos.findIndex(v => v.isDone) > 0;
+        const filteredTodos = filterName === 'All' ? todos : todos.filter(v => (
+                (filterName === 'Active' && !v.isDone) ||
+                (filterName === 'Completed' && v.isDone)
+            ));
         return (
             <div className="todo-app">
                 <Header addTodo={this.addTodo}
                         toggleAll={this.toggleAll}
                         isAllDone={todos.every(v => v.isDone)}
                 />
-                <TodoList todos={todos}
+                <TodoList todos={filteredTodos}
                           deleteTodo={this.deleteTodo}
                           editingId={editingId}
                           editTodo={this.editTodo}
                           saveTodo={this.saveTodo}
-                          cancelEdit = {this.cancelEdit}
-                          togleTodo = {this.togleTodo}/>
+                          cancelEdit={this.cancelEdit}
+                          togleTodo={this.togleTodo}
+                />
                 <Footer clearCompleted={this.clearCompleted}
-                        activeLength = {activeLength}
-                        hasCompleted = {hasCompleted}/>
+                        activeLength={activeLength}
+                        hasCompleted={hasCompleted}
+                        setlectFilter={this.setlectFilter}
+                        filterName={filterName}
+                />
             </div>
         );
     }
