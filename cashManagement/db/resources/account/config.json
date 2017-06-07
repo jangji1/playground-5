@@ -1,0 +1,29 @@
+{
+	"type": "Collection",
+	"properties": {
+		"input": {
+			"name": "input",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "input",
+			"order": 0
+		},
+		"output": {
+			"name": "output",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "output",
+			"order": 1
+		},
+		"currentMoney": {
+			"name": "currentMoney",
+			"type": "number",
+			"typeLabel": "number",
+			"required": false,
+			"id": "currentMoney",
+			"order": 2
+		}
+	}
+}

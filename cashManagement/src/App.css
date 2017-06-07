@@ -1,0 +1,19 @@
+.mainWrap {
+    width : 400px;
+    background : #ffffff;
+}
+.header{
+    width : 100%;
+    overflow : hidden;
+}
+span{
+    width : 100px;
+    float : left;
+    text-align : center;
+}
+.cont {
+    width : 100%;
+    overflow : hidden;
+}
+
+
