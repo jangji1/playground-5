@@ -5,14 +5,14 @@ import Row from './Row'
 class List extends React.Component {
   render() {
     const {
-      transaction
+      account
     } = this.props;
 
-    const list = transaction.map(({ id, money, isDeposit, total }) => (
+    const list = account.map(({ id, money, transaction, total }) => (
       <Row
           key={id}
           money={money}
-          isDeposit={isDeposit}
+          transaction={transaction}
           total={total}
       />
     ));

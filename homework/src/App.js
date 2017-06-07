@@ -6,10 +6,10 @@ import List from './List';
 
 class App extends React.Component {
     state = {
-        transaction: [{
+        account: [{
           id : '',
           money : '',
-          isDeposit : '',
+          transaction : '',
           total : 0
         }],
         balance: 0,
@@ -21,30 +21,39 @@ class App extends React.Component {
       });
     }
     deposit = () => {
-      this.addRow(this.state.inputValue,1);
+      if (this.state.inputValue == 0) {
+        alert('입금할 금액을 입력하세요.')
+      } else {
+        this.addRow(this.state.inputValue,1);
+      }
     }
     withdraw = () => {
-      if (this.state.balance < this.state.inputValue) {
-        alert('잔액이 부족합니다')
-        return false;
+      if (this.state.inputValue == 0) {
+        alert('출금할 금액을 입력하세요.')
+      } else {
+        if (this.state.balance < this.state.inputValue) {
+          alert('잔액이 부족합니다')
+          return false;
+        }
+        this.addRow(this.state.inputValue,-1);
       }
-      this.addRow(this.state.inputValue,-1);
     }
-    addRow = (money,isDeposit) => {
+    addRow = (money,transaction) => {
       this.setState({
-        transaction : [...this.state.transaction, {
+        account : [...this.state.account, {
           id : Date.now(),
           money : money,
-          isDeposit : isDeposit,
-          total : this.state.balance+Number(money)*isDeposit
+          transaction : transaction,
+          total : this.state.balance+Number(money)*transaction
         }],
-        balance : this.state.balance+Number(money)*isDeposit
+        inputValue : 0,
+        balance : this.state.balance+Number(money)*transaction
       })
     }
 
     render() {
         const {
-            transaction,
+            account,
             inputValue,
             balance
         } = this.state;
@@ -65,7 +74,7 @@ class App extends React.Component {
                     </tr>
                   </thead>
                   <List
-                      transaction={transaction}
+                      account={account}
                       balance={balance}
                       addRow={this.addRow}
                   />

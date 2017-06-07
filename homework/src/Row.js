@@ -5,13 +5,13 @@ class Row extends React.Component {
   render() {
     const {
       money,
-      isDeposit,
+      transaction,
       total
     } = this.props;
     return (
       <tr>
-        <td>{isDeposit == 1? money : ''}</td>
-        <td>{isDeposit == -1? money : ''}</td>
+        <td>{transaction == 1? money : ''}</td>
+        <td>{transaction == -1? money : ''}</td>
         <td>{total}</td>
       </tr>
     )
