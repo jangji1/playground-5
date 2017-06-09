@@ -47,7 +47,7 @@ class Todo extends React.Component{
                 </div>
                 <input type="text" className="todo-item__edit"
                     ref = {ref => this._inputDom = ref}
-                    onKeyDown = {e => this.handleKeyDown}
+                    onKeyDown = {e => this.handleKeyDown(e)}
                     onBlur = {cancelEdit}
                 />
             </li>

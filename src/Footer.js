@@ -13,8 +13,8 @@ class Footer extends React.Component{
         const filterButtons = this.filterNames.map(v => (
             <li key = {`filter#${v}`}>
                 <a
-                    classNames = {ClassNames({
-                        seletced : filterName === v
+                    className = {ClassNames({
+                        selected : filterName === v
                     })}
                     onClick = {() => selectFilter(v)}
                 >{v}</a>
