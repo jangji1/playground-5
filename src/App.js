@@ -1,27 +1,32 @@
 import React from 'react';
+import axios from 'axios';
+import update from 'immutability-helper';
 
 import Header from './Header';
 import TodoList from './TodoList';
 import Footer from './Footer';
 
+const ax = axios.create({
+    baseURL: 'http://localhost:2403/todos'
+});
+
 class App extends React.Component {
     state = {
-        todos: [{
-            id: 1000,
-            text: '치킨에 맥주',
-            isDone: false
-        }, {
-            id: 1001,
-            text: '삼겹살에 소주',
-            isDone: false
-        }, {
-            id: 1002,
-            text: '떡튀순',
-            isDone: true
-        }],
+        todos: [],
         editingId: null,
         filterName: 'All'
     };
+
+    componentWillMount() {
+        // 최초 렌더링 직후
+        ax.get('/')
+        .then(res => {
+            console.dir(res);
+            this.setState({
+                todos: res.data
+            });
+        });
+    }
 
     selectFilter = name => {
         this.setState({
@@ -30,22 +35,31 @@ class App extends React.Component {
     }
 
     addTodo = text => {
-        this.setState({
-            todos: [ ...this.state.todos, {
-                id: Date.now(),
-                text,
-                isDone: false
-            }]
+        ax.post('/', {text})
+        .then(res => {
+            this.setState(
+                update(this.state, {
+                    todos: {
+                        $push: [ res.data ]
+                    }
+                })
+            );
         });
     }
 
     deleteTodo = id => {
-        const newTodos = [...this.state.todos];
-        const deleteIndex = newTodos.findIndex(v => v.id === id);
-        newTodos.splice(deleteIndex, 1);
-        this.setState({
-            todos: newTodos
-        })
+        ax.delete(`/${id}`)
+        .then(() => {
+            const deleteIndex = this.state.findIndex(v => v.id === id);
+            const newTodos = update(this.state.todos, {
+                $splice: [
+                    [ deleteIndex, 1]
+                ]
+            });
+            this.setState({
+                todos: newTodos
+            });
+        });
     }
 
     editTodo = id => {
@@ -56,14 +70,21 @@ class App extends React.Component {
 
     saveTodo = (id, newText) => {
         const newTodos = [...this.state.todos];
-        const editIndex = newtodos.findIndex(v => v.id === id);
-        newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
+        const editIndex = newTodos.findIndex(v => v.id === id);
+
+        ax.put(`/${id}`, {
             text: newText
+        }).then(res => {
+            newTodos[editIndex] = res.data;
+            this.setState({
+                todos: newTodos,
+                editingId: null
+            });
         });
-        this.setState({
-            todos: newTodos,
-            editingId: null
-        });
+
+        // newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
+        //     text: newText
+        // });
     }
 
     cancelEdit = () => {
@@ -73,19 +94,30 @@ class App extends React.Component {
     }
 
     toggleTodo = id => {
-        console.log(id);
         const newTodos = [...this.state.todos];
         const editIndex = newTodos.findIndex(v => v.id === id);
-        newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
+
+        ax.put(`/${id}`, {
             isDone: !newTodos[editIndex].isDone
-        })
-        this.setState({
-            todos: newTodos
-        })
+        }).then(res => {
+            newTodos[editIndex] = res.data;
+            this.setState({
+                todos: newTodos
+            })
+        });
+
+        // newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
+        //     isDone: !newTodos[editIndex].isDone
+        // })
+        
     }
 
     toggleAll = () => {
         const newDone = this.state.todos.some(v => !v.isDone);
+
+        const axArray = this.state.todos.map(v => ax.put(`/${v.id}`, {
+            isDone: newDone
+        }));
         const newTodos = this.state.todos.map(v =>
             Object.assign({}, v, {
                 isDone: newDone
@@ -97,6 +129,10 @@ class App extends React.Component {
     }
 
     clearCompleted = () => {
+        const axArray = this.state.todos
+            .filter(v => v.isDone)
+            .map(v => ax.delete(`/${v.id}`));
+
         const newTodos = this.state.todos.filter(v => !v.isDone);
         this.setState({
             todos: newTodos
