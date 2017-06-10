@@ -12,6 +12,7 @@
     "start": "node ./server.js"
   },
   "devDependencies": {
+    "axios": "^0.16.1",
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.1",
     "babel-preset-latest": "^6.24.0",
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "immutability-helper": "^2.2.2"
   }
 }

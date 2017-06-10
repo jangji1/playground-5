@@ -2,7 +2,7 @@
 1. 선언될 때마다 this binding (render가 호출될때마다 bind되서 성능상으로 좋지 않음)
 	onKeyDown = {this.handler.bind(this)}
 
-2. 생성자에서 덮어씌우기 (성능엔 좋지만 많아지면 관리가 힘들다... 또한 instanace가 불필요하게 메서드를 가지게 된다.) proto에도 있음
+2. 생성자에서 덮어씌우기 (성능엔 좋지만 많아지면 관리가 힘들다... 또한 instanace가 불필요하게 메서드를 가지게 된다.) proto에도 있
 	construcotr(){
 		this.handler = this.handler.bind(this);
 	}
