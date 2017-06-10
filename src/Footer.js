@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import ClassNames from 'classnames'
+import { Link } from 'react-router-dom';
+import ClassNames from 'classnames';
+
 
 const propTypes = {
 };
@@ -9,20 +11,23 @@ class Footer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			filterNames : ['All', 'Active', 'Completed']
+			filterNames : ['', 'active', 'completed']
 		}
 
 	}
 
 	render() {
+
 		const filterButtons = this.state.filterNames.map(elem => (
 				<li key={`filter#${elem}`}>
-					<a
+					<Link
 						className={
 							ClassNames({'selected' : this.props.filterName == elem})
 						}
-						onClick={()=>this.props.selectFilter(elem)}
-					>{elem}</a>
+						to={`/${elem}`}
+					>
+						{elem ? elem.replace(/^\w/, elem => elem.toUpperCase()) : 'All'}
+					</Link>
 				</li>
 
 			));
