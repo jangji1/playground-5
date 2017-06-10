@@ -1,4 +1,13 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './reduxPractice/App';
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('root')
+);
+
+/*import React from 'react';
 import {
     BrowserRouter as Router,
     Route,
@@ -17,3 +26,4 @@ ReactDOM.render(
     </Router>,
     document.getElementById('root')
 );
+*/
