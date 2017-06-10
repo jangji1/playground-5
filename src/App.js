@@ -13,8 +13,7 @@ const ax = axios.create({
 class App extends React.Component {
     state = {
         todos: [],
-        editingId: null,
-        filterName: 'all'
+        editingId: null
     }
     componentWillMount(){
         ax.get('/')
@@ -24,11 +23,11 @@ class App extends React.Component {
             })
         })
     }
-    selectFilter = name => {
-        this.setState({
-            filterName : name
-        })
-    }
+    // selectFilter = name => {
+    //     this.setState({
+    //         filterName : name
+    //     })
+    // }
     addTodo = text => {
         ax.post('/', { text })
         .then(res => {
@@ -110,7 +109,7 @@ class App extends React.Component {
     toggleTodo = id => {
         const prevTodos = [...this.state.todos];
         const editIndex = prevTodos.findIndex(v => v.id === id);
-        const newDone = !newTodos[editIndex].isDone
+        const newDone = !prevTodos[editIndex].isDone
         const newTodos = update(prevTodos, {
             [editIndex]: {
                 isDone: {
@@ -125,7 +124,7 @@ class App extends React.Component {
             isDone :  newDone
         }).then(res => {
             this.setState({
-                todos: prevTodos
+                todos:  newTodos
             })
         })
         // newTodos[editIndex] = Object.assign({}, newTodos[editIndex], {
@@ -163,15 +162,23 @@ class App extends React.Component {
             })
         })
     }
-    render(){
+    render() {
         const {
             todos,
-            editingId,
-            filterName
+            editingId
         } = this.state;
+
+        const {
+            match: {
+                params
+            }
+        } = this.props;
+
+        const filterName = params.filterName || '';
+
         const activeLength = todos.filter(v => !v.isDone).length;
         const hasCompleted = todos.findIndex(v => v.isDone) >= 0;
-        const filteredTodos = filterName === 'all'
+        const filteredTodos = !filterName
             ? todos
             : todos.filter(v => (
             (filterName === 'completed' && v.isDone)
@@ -198,7 +205,6 @@ class App extends React.Component {
                     clearCompleted = {this.clearCompleted}
                     hasCompleted = {hasCompleted}
                     filterName = {filterName}
-                    selectFilter = {this.selectFilter}
                 />
             </div>
         )
