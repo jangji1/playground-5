@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import {
   BrowserRouter as Router, // HashRouter, BrowserRouter 중 하나 사용.
@@ -14,4 +15,13 @@ ReactDOM.render(
         <Route path="/:filterName" component={App}/>
     </Switch>
   </Router> , document.getElementById('root')
+);
+*/
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './reduxPractice/App'
+
+ReactDOM.render(
+  <App/>, document.getElementById('root')
 );
