@@ -23,10 +23,10 @@
 
 import React from 'react';
 import ReactDom from 'react-dom';
-import App from './reduxPractice/App';
+import Main from './reduxPractice/components/Main';
 
 ReactDom.render(
-    <App/>,
+    <Main/>,
     document.getElementById('root')
 
 )

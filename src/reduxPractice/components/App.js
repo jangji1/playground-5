@@ -1,7 +1,16 @@
 import React from 'react';
-import InputBox from './InputBox';
+import InputBox from './inputBox';
 import AccountBook from './AccountBook';
+import { connect } from 'react-redux'
+import bankAction from '../actions/bankActions';
 
+const mapStateToProps = state => ({ //store의 state들을 앱한테 props로 전달
+    accountList: state.accountList
+});
+
+const mapDispatchToProps = dispatch => ({ //action에 대한  dispatch(method) 명령을 props로 전달
+    calculate: (type, money) => dispatch(bankAction[type](money))
+});
 class App extends React.Component {
     state = {
         accountList: []
@@ -40,4 +49,13 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+
+//
+// const c = connect(mapStateToProps, mapDispatchToProps);
+// export default c(App);
+//
+// connect = function(a,b){
+//     return function(c){}
+// }
