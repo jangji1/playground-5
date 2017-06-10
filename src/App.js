@@ -14,7 +14,6 @@ class App extends React.Component {
     state = {
         todos: [],
         editingId: null,
-        filterName: 'All'
     };
 
     componentWillMount() {
@@ -25,12 +24,6 @@ class App extends React.Component {
             });
         });
     }
-
-    selectFilter = name => {
-        this.setState({
-            filterName: name
-        });
-    };
 
     addTodo = text => {
         ax.post('/', { text })
@@ -173,18 +166,24 @@ class App extends React.Component {
     render() {
         const {
             todos,
-            editingId,
-            filterName
+            editingId
         } = this.state;
+
+        const {
+            match: {
+                params
+            }
+        } = this.props;
+        const filterName = params.filterName || '';
 
         const activeLength = todos.filter(v => !v.isDone).length;
         const hasCompleted = todos.findIndex(v => v.isDone) >= 0;
 
-        const filteredTodos = filterName === 'All'
+        const filteredTodos = !filterName
             ? todos
             : todos.filter(v => (
-                (filterName === 'Completed' && v.isDone)
-                || (filterName === 'Active' && !v.isDone)
+                (filterName === 'completed' && v.isDone)
+                || (filterName === 'active' && !v.isDone)
             ));
 
         return (
@@ -208,7 +207,6 @@ class App extends React.Component {
                     clearCompleted={this.clearCompleted}
                     hasCompleted={hasCompleted}
                     filterName={filterName}
-                    selectFilter={this.selectFilter}
                 />
             </div>
         );
