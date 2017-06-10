@@ -14,7 +14,6 @@ class App extends React.Component {
     state = {
         todos: [],
         editingId: null,
-        filterName: 'All'
     };
 
     componentWillMount() { // 최초 렌더링 직후
@@ -25,12 +24,6 @@ class App extends React.Component {
             this.setState({
                 todos: res.data
             });
-        });
-    }
-
-    selectFilter = name => {
-        this.setState({
-            filterName: name
         });
     }
 
@@ -156,17 +149,23 @@ class App extends React.Component {
         const {
             todos,
             editingId,
-            filterName
         } = this.state;
+
+        const {
+            match : {
+                params
+            }
+        } = this.props;
+        const filterName = params.filterName || '';
 
         const activeLength = todos.filter(v => !v.isDone).length;
         const hasCompleted = todos.findIndex(v => v.isDone) >= 0;
 
-        const filteredTodos = filterName === 'All'
+        const filteredTodos = !filterName
             ? todos
             : todos.filter(v => (
-                (filterName === 'Completed' && v.isDone)
-                || (filterName === 'Active' && !v.isDone)
+                (filterName === 'completed' && v.isDone)
+                || (filterName === 'active' && !v.isDone)
             ));
 
         return (
@@ -190,7 +189,6 @@ class App extends React.Component {
                     clearCompleted={this.clearCompleted}
                     hasCompleted={hasCompleted}
                     filterName={filterName}
-                    selectFilter={this.selectFilter}
                 />
             </div>
         );
