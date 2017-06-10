@@ -29,13 +29,6 @@ class App extends React.Component {
     state = {
         todos: [],
         editingId: null,
-        filterName: 'All'
-    };
-
-    setlectFilter = filterName => {
-        this.setState({
-            filterName
-        })
     };
 
     addTodo = text => {
@@ -167,13 +160,19 @@ class App extends React.Component {
         const {
             todos,
             editingId,
-            filterName
         }= this.state;
+        const {
+            match : {
+                params
+            }
+        } = this.props;
+
+        const filterName = params.filterName || '';
         const activeLength = todos.filter(v => !v.isDone).length;
         const hasCompleted = todos.findIndex(v => v.isDone) >=  0;
-        const filteredTodos = filterName === 'All' ? todos : todos.filter(v => (
-                (filterName === 'Active' && !v.isDone) ||
-                (filterName === 'Completed' && v.isDone)
+        const filteredTodos = !filterName ? todos : todos.filter(v => (
+                (filterName === 'active' && !v.isDone) || // 대소문자를 구별못한다.
+                (filterName === 'completed' && v.isDone)
             ));
         return (
             <div className="todo-app">
@@ -192,7 +191,6 @@ class App extends React.Component {
                 <Footer clearCompleted={this.clearCompleted}
                         activeLength={activeLength}
                         hasCompleted={hasCompleted}
-                        setlectFilter={this.setlectFilter}
                         filterName={filterName}
                 />
             </div>
