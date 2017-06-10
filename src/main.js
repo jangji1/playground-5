@@ -6,16 +6,16 @@ import {
 	Switch
 } from 'react-router-dom';
 
-import App from './App';
-
-ReactDom.render(
-	<Router>
+import App from './reduxPractice/App';
+/*const main = <Router>
 		<Switch>
 			<Route exact path ="/" component={App} />
 			<Route path ="/:filterName" component={App} />
 		</Switch>
-	</Router>
-	,
+	</Router>;*/
+const main = <App />;
+ReactDom.render(
+	main,
 	document.getElementById('root')
 );
 

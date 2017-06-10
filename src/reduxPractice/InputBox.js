@@ -1,0 +1,42 @@
+import React, { Component, PropTypes } from 'react';
+
+class InputBox extends Component {
+	constructor(props) {
+		super(props);
+		this.state={
+			buttonStyle : {
+				display : 'inline-block',
+				border : '1px solid #000',
+				marginLeft : 5
+			}
+		};
+		this.calculate = this.calculate.bind(this);
+	}
+	calculate(type){
+		this.props.calculate(type,this._input.value);
+		this._input.value = '';
+		this._input.focus();
+	}
+	render() {
+
+		return(
+			<div>
+				<input type="text" ref={ref=>this._input = ref} />
+				<button
+					style={this.state.buttonStyle}
+					onClick = {()=> this.calculate('save')}
+				>
+					입금
+				</button>
+				<button
+					style={this.state.buttonStyle}
+					onClick = {()=> this.calculate('withdraw')}
+				>
+					출금
+				</button>
+			</div>
+		);
+	}
+}
+
+export default InputBox;
