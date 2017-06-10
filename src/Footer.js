@@ -1,14 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ClassNames from 'classnames';
 
 class Footer extends React.Component {
 
-    filterNames = ['All', 'Active', 'Completed'];
+    filterNames = ['', 'active', 'completed'];
 
     render(){
         const {
             filterName,
-            selectFilter,
             activeLength,
             hasCompleted,
             clearCompleted
@@ -16,12 +16,12 @@ class Footer extends React.Component {
 
         const links = this.filterNames.map(v => (
             <li key={`filter#${v}`}>
-                <a
+                <Link
                     className={ClassNames({
                         selected : filterName == v
                     })}
-                    onClick={()=> selectFilter(v)}
-                >{v}</a>
+                    to={`/${v}`}
+                >{v ? v.replace(/^\w/, v => v.toUpperCase()) : 'All'}</Link>
             </li>
         ));
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import update from 'immutability-helper';
 
 import Header from './Header';
 import TodoList from './TodoList';
@@ -13,8 +14,7 @@ class App extends React.Component {
 
     state = {
         todos : [],
-        editingId : null,
-        filterName : 'All'
+        editingId : null
     };
 
     // 로딩바 추가시 state 에 isReady 추가하여 false 인지 true 인지 체크해서 render에 뿌려 주고 리퀘스트 완료시 없애면 된다
@@ -27,31 +27,33 @@ class App extends React.Component {
         });
     }
 
-    selectFilter = filterName => {
-        this.setState({
-            filterName
-        });
-    }
-
     addTodo = text => {
         ax.post('/', { text })
         .then(res => {
             this.setState({
-                todos: [... this.state.todos, res.data]
+                todos: update(this.state.todos, {
+                    $push : [res.data]
+                })
             });
         });
-
     }
 
     deleteTodo = id => {
-        const newTodos = [... this.state.todos];
-        const deleteIndex = newTodos.findIndex(v => v.id == id);
+        const prevTodos = [... this.state.todos];
+        const deleteIndex = this.state.todos.findIndex(v => v.id == id);
+        const newTodos = update(prevTodos, {
+            $splice : [
+                [ deleteIndex, 1 ]
+            ]
+        })
+        this.setState({
+            todos : newTodos
+        });
 
         ax.delete(`/${id}`)
-        .then(() => {
-            newTodos.splice(deleteIndex, 1);
+        .catch(() => {
             this.setState({
-                todos : newTodos
+                todos : prevTodos
             });
         });
 
@@ -64,15 +66,24 @@ class App extends React.Component {
     }
 
     saveTodo = (id, newText) => {
-        const newTodos = [...this.state.todos];
-        const editIndex = newTodos.findIndex(v => v.id == id);
+        const prevTodos = [... this.state.todos];
+        const editIndex = prevTodos.findIndex(v => v.id == id);
+        const newTodos = update(prevTodos, {
+            [editIndex] : {
+                text : {
+                    $set : newText
+                }
+            }
+        });
+        this.setState({
+            todos : newTodos,
+            editingId : null
+        });
 
         ax.put(`/${id}`, {text : nexText})
-        .then(res => {
-            newTodos[editIndex] = res.data;
+        .catch(() => {
             this.setState({
-                todos : newTodos,
-                editingId : null
+                todos : prevTodos
             });
         });
 
@@ -85,45 +96,73 @@ class App extends React.Component {
     };
 
     toggleTodo = id => {
-        const newTodos = [...this.state.todos];
-        const editIndex = newTodos.findIndex(v => v.id == id);
+        const prevTodos = [...this.state.todos];
+        const editIndex = prevTodos.findIndex(v => v.id == id);
+        const newDone = !prevTodos[editIndex].isDone;
+        const newTodos = update(prevTodos, {
+            [editIndex] : {
+                isDone : {
+                    $set : newDone
+                }
+            }
+        });
+        this.setState({
+            todos : newTodos
+        });
 
-        ax.put(`/${id}`, {isDone : !newTodos[editIndex].isDone })
-        .then(res => {
-            newTodos[editIndex] = res.data;
+        ax.put(`/${id}`, {isDone : newDone })
+        .catch(() => {
             this.setState({
-                todos : newTodos
+                todos : prevTodos
             });
         });
     }
 
     toggleAll = () => {
 
-        // const allIsDone = !this.state.todos.every(v => v.isDone); // 전부 해당될때
-        const newDone = this.state.todos.some(v => !v.isDone);  // 일부만 해당될때
+
+        const prevTodos = [... this.stat.todos];
+        const newDone = prevTodos.some(v => !v.isDone);
+        const newTodos = prevTodos.map(v => update(v, {
+            isDone : {
+                $set : newDone
+            }
+        }));
+        this.setState({
+            todos : newTodos
+        });
+
         const axArray = this.state.todos.map(v => (
             ax.put(`/${v.id}`, {isDone : newDone})
         ));
 
         axios.all(axArray)
-        .then(res => {
+        .catch(() => {
             this.setState({
-                todos : res.map(v => v.data)
+                todos : prevTodos
             });
         });
 
     }
 
     clearCompleted = () => {
-        const newTodos = this.state.todos.filter(v => !v.isDone);
+        const prevTodos = [... this.state.todos];
+        const newTodos = update(prevTodos, {
+            $apply : todos => todos.filter(v => !v.isDone)
+        });
+        this.setState({
+            todos : newTodos
+        });
+
         const axArray = this.state.todos.filter(v => v.isDone)
             .map(v => (
                 ax.delete(`/${v.id}`)
             ));
 
-        axios.all(axArray).then(() => {
+        axios.all(axArray)
+        .catch(() => {
             this.setState({
-                todos : newTodos
+                todos : prevTodos
             });
         });
 
@@ -133,18 +172,24 @@ class App extends React.Component {
 
         const {
             todos,
-            editingId,
-            filterName
+            editingId
         } = this.state;
+
+        const {
+            match : {
+                params
+            }
+        } = this.props;
+        const filterName = params.filterName || '';
 
         const activeLength = todos.filter(v => !v.isDone).length;
         const hasCompleted = todos.findIndex(v => v.isDone) >= 0 ;
 
-        const filteredTodos = filterName == 'All'
+        const filteredTodos = !filterName
             ? todos
             : todos.filter(v => (
-                (filterName == 'Active' && !v.isDone)
-                || (filterName == 'Completed' && v.isDone)
+                (filterName == 'active' && !v.isDone)
+                || (filterName == 'completed' && v.isDone)
             ));
 
         todos.filter(v => {
@@ -175,7 +220,6 @@ class App extends React.Component {
                     clearCompleted={this.clearCompleted}
                     hasCompleted={hasCompleted}
                     filterName={filterName}
-                    selectFilter={this.selectFilter}
                 />
             </div>
         );
