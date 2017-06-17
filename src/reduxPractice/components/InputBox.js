@@ -18,7 +18,8 @@ class InputBox extends React.Component {
             <div>
                 <input
                     type="text"
-                    ref={ref => this._input = ref} />
+                    ref={ref => this._input = ref}
+                />
                 <button
                     style={this.buttonStyle}
                     onClick={() => this.calculate('save')}
@@ -32,8 +33,7 @@ class InputBox extends React.Component {
                     출금
                 </button>
             </div>
-        )
+        );
     }
 }
-
 export default InputBox;

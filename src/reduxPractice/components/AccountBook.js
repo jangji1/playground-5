@@ -3,8 +3,8 @@ import React from 'react';
 const AccountBook = ({ accountList }) => {
     const tableData = accountList.map(({ type, money, result }, i) => (
         <tr key={i}>
-            <td>{type === 'save' ? money: ''}</td>
-            <td>{type === 'withdraw' ? money: ''}</td>
+            <td>{type === 'save' ? money : ''}</td>
+            <td>{type === 'withdraw' ? money : ''}</td>
             <td>{result}</td>
         </tr>
     ));
@@ -19,10 +19,10 @@ const AccountBook = ({ accountList }) => {
                 </tr>
             </thead>
             <tbody>
-                { tableData }
+                {tableData}
             </tbody>
         </table>
     );
-}
+};
 
 export default AccountBook;
