@@ -20,8 +20,9 @@ ReactDOM.render(
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './reduxPractice/App'
+import App from './reduxPractice/components/App'
+import Main from './reduxPractice/Main';
 
 ReactDOM.render(
-  <App/>, document.getElementById('root')
+  <Main/>, document.getElementById('root')
 );
