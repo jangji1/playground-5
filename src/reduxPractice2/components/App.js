@@ -1,16 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import InputBox from './InputBox';
 import AccountBook from './AccountBook';
+import Tabs from './Tabs';
 
 import { connect } from 'react-redux';
 import bankActions from '../actions/bankActions';
+import tabActions from '../actions/tabActions';
 
 /* 중요! */
 const mapStateToProps = state =>({ // 스토어에 있는 상태들(parameter)을 props로 전환하여 전달
-	accountList : state.accountList
+	accountList : state.bank.accountList,
+	focused : state.tab.focused
 });
 const mapDispatchToProps = dispatch=>({ // action에 대한 dispatch명령(메소드(parameter))를 props로 전달
-	calculate : (type,money) => dispatch(bankActions[type](money)) // dispatch의 parameter는 action객체이다.
+	calculate : (type,money) => dispatch(bankActions[type](money)), // dispatch의 parameter는 action객체이다.
+	changeTab : (index) => dispatch(tabActions.changeTab(index))
 });
 /*
 => App 컴포넌트에는
@@ -58,11 +62,17 @@ class App extends Component {
 	*/
 	render() {
 		const {
+			focused,
+			changeTab,
 			accountList,
 			calculate
 		} = this.props;
 		return(
 			<div>
+				<Tabs
+					focused={focused}
+					changeTab={changeTab}
+				/>
 				<InputBox
 					calculate = {calculate}
 				/>

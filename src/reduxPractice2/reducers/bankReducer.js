@@ -51,9 +51,10 @@ const bankReducer = (state = initialState, action) => {
 						money,
 						result: lastResult - money
 					}
-				]
+				],
 			}
 		}
+
 		default : return state
 
 	}
