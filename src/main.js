@@ -6,14 +6,19 @@ import {
 	Switch
 } from 'react-router-dom';
 
-import App from './reduxPractice/App';
-/*const main = <Router>
+import Main from './reduxPractice2/Main';
+/* for routerPractice
+const main = <Router>
 		<Switch>
 			<Route exact path ="/" component={App} />
 			<Route path ="/:filterName" component={App} />
 		</Switch>
-	</Router>;*/
+	</Router>;
+*/
+/* for reduxPractice
 const main = <App />;
+*/
+const main = <Main />
 ReactDom.render(
 	main,
 	document.getElementById('root')
