@@ -9,7 +9,8 @@ import tabActions from '../actions/tabActions';
 
 const mapStateToProps = state => ({
     accountList: state.bank.accountList,
-    focused: state.tab.focused
+    effect: state.bank.effect,
+    focused: state.tab.focused,
 });
 const mapDispatchToProps = dispatch => ({
     changeTab: index => dispatch(tabActions.changeTab(index)),
@@ -22,11 +23,12 @@ class App extends React.Component {
             focused,
             changeTab,
             accountList,
-            calculate
+            calculate,
+            effect
         } = this.props;
 
         return (
-            <div>
+            <div className={effect ? 'effect' : ''}>
                 <Tabs
                     focused={focused}
                     changeTab={changeTab}

@@ -1,5 +1,6 @@
 const initialState = {
-    accountList: []
+    accountList: [],
+    effect: false
 };
 
 const bankReducer = (state = initialState, action) => {
@@ -17,7 +18,8 @@ const bankReducer = (state = initialState, action) => {
                     money,
                     result: lastResult + money
                 }
-            ]
+            ],
+            effect: state.effect
         };
     }
     case 'WITHDRAW_MONEY': {
@@ -33,7 +35,20 @@ const bankReducer = (state = initialState, action) => {
                     money,
                     result: lastResult - money
                 }
-            ]
+            ],
+            effect: state.effect
+        };
+    }
+    case 'SHOW_EFFECT': {
+        return {
+            accountList: state.accountList,
+            effect: true
+        };
+    }
+    case 'HIDE_EFFECT': {
+        return {
+            accountList: state.accountList,
+            effect: false
         };
     }
     default: return state;
