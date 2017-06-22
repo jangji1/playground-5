@@ -12,7 +12,7 @@ const bankReducer = (state = initialState, action) => {
             : 0;
         return {
             accountList : [
-                ...prevAccout, {
+                ...prevAccount, {
                     type: 'save',
                     money,
                     result: lastResult + money
@@ -20,9 +20,9 @@ const bankReducer = (state = initialState, action) => {
             ]
         }
     }
-    case 'WITHDRAW_MOENY' : {
-        const money = action.moeny * 1;
-        const prevAccoutn = state.accountList;
+    case 'WITHDRAW_MONEY' : {
+        const money = action.money * 1;
+        const prevAccount = state.accountList;
         const lastResult = prevAccount.length
             ? prevAccount[prevAccount.length - 1].result
             : 0;

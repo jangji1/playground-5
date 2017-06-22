@@ -15,7 +15,7 @@ const Tabs = ({
         {tabList.map((tab, i) => (
             <li
                 key = {`tabList${i}`}
-                onClick={() => chnageTab(i)}
+                onClick={() => changeTab(i)}
             >
                 <p>#{i}</p>
                 <p style={{

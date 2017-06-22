@@ -8,7 +8,7 @@ const reducers = combineReducers({
 });
 
 const store = createStore(
-    reducres,
+    reducers,
     window.__REDUX_DEVTOOLS_EXTENSINON__ && window.__REDUX_DEVTOOLS_EXTENSINON__()
 );
 

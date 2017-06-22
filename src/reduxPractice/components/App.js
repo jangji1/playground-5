@@ -9,13 +9,13 @@ import tabActions from '../actions/tabActions';
 
 
 const mapStateToProps = state => ({
-    accountList: state.accountList,
+    accountList: state.bank.accountList,
     focused: state.tab.focused
 });
 
 const mapDispatchToProps = dispatch => ({
-    changeTab: index => dispatch(tabAcions.changeTab(index)),
-    caculate: (type, money) => displatch(bankActions[type](money))
+    changeTab: index => dispatch(tabActions.changeTab(index)),
+    calculate: (type, money) => dispatch(bankActions[type](money))
 });
 
 class App extends React.Component {
@@ -32,8 +32,8 @@ class App extends React.Component {
                     focused = {focused}
                     changeTab = {changeTab}
                 />
-                <InputBox calculate = {this.calculate} />
-                <AccountBook accountList = {this.state.accountList} />
+                <InputBox calculate = {calculate} />
+                <AccountBook accountList = {accountList} />
             </div>
         )
     }
