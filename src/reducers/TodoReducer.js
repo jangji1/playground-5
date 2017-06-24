@@ -59,13 +59,28 @@ const TodoReducer = (state = initialState, action) => {
         });
     }
     case 'TOGGLE_TODO': {
-        return state;
+        const editIndex = state.todos.findIndex(v => v.id === action.id);
+        return update(state, {
+            todos: {
+                [editIndex]: {
+                    $set: action.editedTodo
+                }
+            }
+        });
     }
     case 'TOGGLE_ALL': {
-        return state;
+        return update(state, {
+            todos: {
+                $set: action.todos
+            }
+        });
     }
     case 'CLEAR_COMPLETED': {
-        return state;
+        return update(state, {
+            todos: {
+                $apply: todos => todos.filter(v => !v.isDone)
+            }
+        });
     }
     default: return state;
     }
