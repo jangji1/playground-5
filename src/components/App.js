@@ -1,99 +1,36 @@
 import React from 'react';
-import axios from 'axios';
-import update from 'immutability-helper';
+import { connect } from 'react-redux';
+
 
 import Header from './Header';
 import TodoList from './TodoList';
 import Footer from './Footer';
 
-const ax = axios.create({
-    baseURL: 'http://localhost:2403/todos'
+import TodoActions from '../actions/TodoActions';
+
+const mapStateToProps = state => ({
+    todos: state.todos,
+    editingId: state.editingId
+});
+const mapDispatchToProps = dispatch => ({
+    getTodos: () => dispatch(TodoActions.getTodos()),
+    addTodo: text => dispatch(TodoActions.addTodo(text)),
+    deleteTodo: id => dispatch(TodoActions.deleteTodo(id)),
+    editTodo: id => dispatch(TodoActions.editTodo(id)),
+    saveTodo: (id, newText) => dispatch(TodoActions.saveTodo(id, newText)),
+    cancelEdit: () => dispatch(TodoActions.cancelEdit()),
+    toggleTodo: id => dispatch(TodoActions.toggleTodo(id)),
+    toggleAll: () => dispatch(TodoActions.toggleAll()),
+    clearCompleted: () => dispatch(TodoActions.clearCompleted())
 });
 
 class App extends React.Component {
-    state = {
-        todos: [],
-        editingId: null,
-    };
 
     componentWillMount() {
-        ax.get('/')
-        .then(res => {
-            this.setState({
-                todos: res.data
-            });
-        });
+        this.props.getTodos();
     }
 
-    addTodo = text => {
-        ax.post('/', { text })
-        .then(res => {
-            this.setState(
-                update(this.state, {
-                    todos: {
-                        $push: [ res.data ]
-                    }
-                })
-            );
-        });
-    };
-
-    deleteTodo = id => {
-        const prevTodos = [...this.state.todos];
-        const deleteIndex = prevTodos.findIndex(v => v.id === id);
-        const newTodos = update(prevTodos, {
-            $splice: [
-                [ deleteIndex, 1]
-            ]
-        });
-        this.setState({
-            todos: newTodos
-        });
-
-        ax.delete(`/${id}`)
-        .catch(() => {
-            this.setState({
-                todos: prevTodos
-            });
-        });
-    };
-
-    editTodo = id => {
-        this.setState({
-            editingId: id
-        });
-    };
-
-    saveTodo = (id, newText) => {
-        const prevTodos = [...this.state.todos];
-        const editIndex = prevTodos.findIndex(v => v.id === id);
-        const newTodos = update(prevTodos, {
-            [editIndex]: {
-                text: {
-                    $set: newText
-                }
-            }
-        });
-        this.setState({
-            todos: newTodos,
-            editingId: null
-        });
-
-        ax.put(`/${id}`, {
-            text: newText
-        }).catch(() => {
-            this.setState({
-                todos: prevTodos
-            });
-        });
-    };
-
-    cancelEdit = () => {
-        this.setState({
-            editingId: null
-        });
-    };
-
+    /*
     toggleTodo = id => {
         const prevTodos = [...this.state.todos];
         const editIndex = prevTodos.findIndex(v => v.id === id);
@@ -162,12 +99,21 @@ class App extends React.Component {
             });
         });
     };
+    */
 
     render() {
         const {
             todos,
-            editingId
-        } = this.state;
+            editingId,
+            addTodo,
+            deleteTodo,
+            editTodo,
+            saveTodo,
+            cancelEdit,
+            toggleTodo,
+            toggleAll,
+            clearCompleted
+        } = this.props;
 
         const {
             match: {
@@ -190,21 +136,21 @@ class App extends React.Component {
             <div className="todo-app">
                 <Header
                     isAllDone={todos.every(v => v.isDone)}
-                    addTodo={this.addTodo}
-                    toggleAll={this.toggleAll}
+                    addTodo={addTodo}
+                    toggleAll={toggleAll}
                 />
                 <TodoList
                     todos={filteredTodos}
                     editingId={editingId}
-                    deleteTodo={this.deleteTodo}
-                    editTodo={this.editTodo}
-                    saveTodo={this.saveTodo}
-                    cancelEdit={this.cancelEdit}
-                    toggleTodo={this.toggleTodo}
+                    deleteTodo={deleteTodo}
+                    editTodo={editTodo}
+                    saveTodo={saveTodo}
+                    cancelEdit={cancelEdit}
+                    toggleTodo={toggleTodo}
                 />
                 <Footer
                     activeLength={activeLength}
-                    clearCompleted={this.clearCompleted}
+                    clearCompleted={clearCompleted}
                     hasCompleted={hasCompleted}
                     filterName={filterName}
                 />
@@ -213,4 +159,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
