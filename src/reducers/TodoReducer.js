@@ -1,28 +1,27 @@
 import update from 'immutability-helper';
-
+import actionTypes from '../actionTypes';
 const initialState = {
     todos: [],
     editingId: null
 };
 
-const TodoReducer = (state = initialState, action) => {
-    switch(action.type) {
-    case 'GET_TODOS': {
+const TodoReducerObject = {
+    [actionTypes.getTodos](state, {todos}) {
         return update(state, {
             todos: {
-                $set: action.todos
+                $set: todos
             }
         });
-    }
-    case 'ADD_TODO': {
+    },
+    [actionTypes.addTodo](state, {newTodo}) {
         return update(state, {
             todos: {
-                $push: [ action.newTodo ]
+                $push: [ newTodo ]
             }
         });
-    }
-    case 'DELETE_TODO': {
-        const deleteIndex = state.todos.findIndex(v => v.id === action.id);
+    },
+    [actionTypes.deleteTodo](state, {id}) {
+        const deleteIndex = state.todos.findIndex(v => v.id === id);
         return update(state, {
             todos: {
                 $splice: [
@@ -30,60 +29,63 @@ const TodoReducer = (state = initialState, action) => {
                 ]
             }
         });
-    }
-    case 'EDIT_TODO': {
+    },
+    [actionTypes.editTodo](state, {id}) {
         return update(state, {
             editingId: {
-                $set: action.id
+                $set: id
             }
         });
-    }
-    case 'SAVE_TODO': {
-        const editIndex = state.todos.findIndex(v => v.id === action.id);
+    },
+    [actionTypes.saveTodo](state, {id, editedTodo}) {
+        const editIndex = state.todos.findIndex(v => v.id === id);
         return update(state, {
             todos: {
                 [editIndex]: {
-                    $set: action.editedTodo
+                    $set: editedTodo
                 }
             },
             editingId: {
                 $set: null
             }
         });
-    }
-    case 'CANCEL_EDIT': {
+    },
+    [actionTypes.cancelEdit](state) {
         return update(state, {
             editingId: {
                 $set: null
             }
         });
-    }
-    case 'TOGGLE_TODO': {
-        const editIndex = state.todos.findIndex(v => v.id === action.id);
+    },
+    [actionTypes.toggleTodo](state, {id, editedTodo}) {
+        const editIndex = state.todos.findIndex(v => v.id === id);
         return update(state, {
             todos: {
                 [editIndex]: {
-                    $set: action.editedTodo
+                    $set: editedTodo
                 }
             }
         });
-    }
-    case 'TOGGLE_ALL': {
+    },
+    [actionTypes.toggleAll](state, {todos}) {
         return update(state, {
             todos: {
-                $set: action.todos
+                $set: todos
             }
         });
-    }
-    case 'CLEAR_COMPLETED': {
+    },
+    [actionTypes.clearCompleted](state) {
         return update(state, {
             todos: {
                 $apply: todos => todos.filter(v => !v.isDone)
             }
         });
     }
-    default: return state;
-    }
 };
+
+const TodoReducer = (state = initialState, action) =>
+    TodoReducerObject[action.type]
+        ? TodoReducerObject[action.type](state, action)
+        : state;
 
 export default TodoReducer;

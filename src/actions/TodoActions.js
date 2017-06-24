@@ -1,3 +1,4 @@
+import actionTypes from '../actionTypes';
 import axios from 'axios';
 const ax = axios.create({
     baseURL: 'http://localhost:2403/todos'
@@ -7,40 +8,40 @@ const TodoActions = {
     getTodos: () => dispatch =>
         ax.get('/')
         .then(res => dispatch({
-            type: 'GET_TODOS',
+            type: actionTypes.getTodos,
             todos: res.data
         })),
     addTodo: text => dispatch =>
         ax.post('/', { text })
         .then(res => dispatch({
-            type: 'ADD_TODO',
+            type: actionTypes.addTodo,
             newTodo: res.data
         })),
     deleteTodo: id => dispatch =>
         ax.delete(`/${id}`)
         .then(() => dispatch({
-            type: 'DELETE_TODO',
+            type: actionTypes.deleteTodo,
             id
         })),
     editTodo: id => ({
-        type: 'EDIT_TODO',
+        type: actionTypes.editTodo,
         id
     }),
     saveTodo: (id, newText) => dispatch =>
         ax.put(`/${id}`, { text: newText })
         .then(res => dispatch({
-            type: 'SAVE_TODO',
+            type: actionTypes.saveTodo,
             id,
             editedTodo: res.data
         })),
     cancelEdit: () => ({
-        type: 'CANCEL_EDIT'
+        type: actionTypes.cancelEdit
     }),
     toggleTodo: id => (dispatch, getState) => {
         const newDone = !getState().todos.find(v => v.id === id).isDone;
         ax.put(`/${id}`, { isDone: newDone })
         .then(res => dispatch({
-            type: 'TOGGLE_TODO',
+            type: actionTypes.toggleTodo,
             id,
             editedTodo: res.data
         }));
@@ -53,7 +54,7 @@ const TodoActions = {
         );
         axios.all(axArray)
         .then(res => dispatch({
-            type: 'TOGGLE_ALL',
+            type: actionTypes.toggleAll,
             todos: res.map(v => v.data)
         }));
     },
@@ -63,7 +64,7 @@ const TodoActions = {
         .map(v => ax.delete(`/${v.id}`));
         axios.all(axArray)
         .then(() => dispatch({
-            type: 'CLEAR_COMPLETED'
+            type: actionTypes.clearCompleted
         }));
     }
 };
