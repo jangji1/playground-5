@@ -1,13 +1,19 @@
 const actionTypes = {
-    getTodos: 'todo_@_ GET_TODOS',
-    addTodo: 'todo_@_ ADD_TODO',
-    deleteTodo: 'todo_@_ DELETE_TODO',
-    editTodo: 'todo_@_ EDIT_TODO',
-    saveTodo: 'todo_@_ SAVE_TODO',
-    cancelEdit: 'todo_@_ CANCEL_EDIT',
-    toggleTodo: 'todo_@_ TOGGLE_TODO',
-    toggleAll: 'todo_@_ TOGGLE_ALL',
-    clearCompleted: 'todo_@_ CLEAR_COMPLETED'
+    requestGetTodos: 'REQUEST_GET_TODOS',
+    receiveGetTodosSuccess: 'RECEIVE_GET_TODOS_SUCCESS',
+    receiveGetTodosFailed: 'RECEIVE_GET_TODOS_FAILED',
+    requestAddTodo: 'REQEUEST_ADD_TODO',
+    receiveAddTodoSuccess: 'RECEIVE_ADD_TODO_SUCCESS',
+    receiveAddTodoFailed: 'RECEIVE_ADD_TODO_FAILED',
+    requestDeleteTodo: 'REQUEST_DELETE_TODO',
+    receiveDeleteTodoSuccess: 'RECEIVE_DELETE_TODO_SUCCESS',
+    receiveDeleteTodoFailed: 'RECEIVE_DELETE_TODO_FAILED',
+    editTodo: 'EDIT_TODO',
+    saveTodo: 'SAVE_TODO',
+    cancelEdit: 'CANCEL_EDIT',
+    toggleTodo: 'TOGGLE_TODO',
+    toggleAll: 'TOGGLE_ALL',
+    clearCompleted: 'CLEAR_COMPLETED'
 };
 
 export default actionTypes;

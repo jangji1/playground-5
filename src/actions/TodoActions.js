@@ -5,24 +5,56 @@ const ax = axios.create({
 });
 
 const TodoActions = {
-    getTodos: () => dispatch =>
+    getTodos: () => dispatch => {
+        dispatch({
+            type: actionTypes.requestGetTodos
+        });
         ax.get('/')
         .then(res => dispatch({
-            type: actionTypes.getTodos,
+            type: actionTypes.receiveGetTodosSuccess,
             todos: res.data
-        })),
-    addTodo: text => dispatch =>
+        }))
+        .catch(() => dispatch({
+            type: actionTypes.receiveGetTodosFailed
+        }));
+    },
+    addTodo: text => dispatch => {
+        const tempId = 'temp_' + Date.now();
+        dispatch({
+            type: actionTypes.requestAddTodo,
+            newTodo: {
+                id: tempId,
+                text,
+                isDone: false,
+                isTemporal: true
+            }
+        });
         ax.post('/', { text })
         .then(res => dispatch({
-            type: actionTypes.addTodo,
+            type: actionTypes.receiveAddTodoSuccess,
+            tempId,
             newTodo: res.data
-        })),
-    deleteTodo: id => dispatch =>
+        }))
+        .catch(() => dispatch({
+            type: actionTypes.receiveAddTodoFailed,
+            tempId
+        }));
+    },
+    deleteTodo: id => (dispatch, getState) => {
+        const prevTodos = getState().todos;
+        dispatch({
+            type: actionTypes.requestDeleteTodo,
+            id
+        });
         ax.delete(`/${id}`)
         .then(() => dispatch({
-            type: actionTypes.deleteTodo,
-            id
-        })),
+            type: actionTypes.receiveDeleteTodoSuccess,
+        }))
+        .catch(() => dispatch({
+            type: actionTypes.receiveDeleteTodoFailed,
+            todos: prevTodos
+        }));
+    },
     editTodo: id => ({
         type: actionTypes.editTodo,
         id

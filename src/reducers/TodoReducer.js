@@ -6,27 +6,55 @@ const initialState = {
 };
 
 const TodoReducerObject = {
-    [actionTypes.getTodos](state, {todos}) {
+    [actionTypes.receiveGetTodosSuccess](state, {todos}) {
         return update(state, {
             todos: {
                 $set: todos
             }
         });
     },
-    [actionTypes.addTodo](state, {newTodo}) {
+    [actionTypes.requestAddTodo](state, {newTodo}) {
         return update(state, {
             todos: {
                 $push: [ newTodo ]
             }
         });
     },
-    [actionTypes.deleteTodo](state, {id}) {
+    [actionTypes.receiveAddTodoSuccess](state, {tempId, newTodo}) {
+        const tempIndex = state.todos.findIndex(v => v.id === tempId);
+        return update(state, {
+            todos: {
+                [tempIndex]: {
+                    $set: newTodo
+                }
+            }
+        });
+    },
+    [actionTypes.receiveAddTodoFailed](state, {tempId}) {
+        const tempIndex = state.todos.findIndex(v => v.id === tempId);
+        return update(state, {
+            todos: {
+                $splice: [
+                    [ tempIndex, 1 ]
+                ]
+            }
+        });
+    },
+
+    [actionTypes.requestDeleteTodo](state, {id}) {
         const deleteIndex = state.todos.findIndex(v => v.id === id);
         return update(state, {
             todos: {
                 $splice: [
                     [ deleteIndex, 1 ]
                 ]
+            }
+        });
+    },
+    [actionTypes.receiveDeleteTodoFailed](state, {todos}) {
+        return update(state, {
+            todos: {
+                $set: todos
             }
         });
     },

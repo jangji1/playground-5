@@ -23,6 +23,7 @@ class Todo extends React.Component {
             text,
             isEditing,
             isDone,
+            isTemporal,
             editTodo,
             deleteTodo,
             cancelEdit,
@@ -31,7 +32,8 @@ class Todo extends React.Component {
         return (
             <li className={ClassNames('todo-item', {
                 editing: isEditing,
-                completed: isDone
+                completed: isDone,
+                temporal: isTemporal
             })}>
                 <button
                     className="toggle"
